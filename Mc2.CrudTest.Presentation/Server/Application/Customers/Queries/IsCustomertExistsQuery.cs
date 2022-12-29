@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Mc2.CrudTest.Presentation.Server.Application.Customers.Queries
 {
-    public class IsCustomertExistsQueryHandler : IRequestHandler<IsCustomertExistsQuery, bool>
+    public class IsCustomertExistsQueryHandler : IRequestHandler<IsCustomerExistsQuery, bool>
     {
         private IApplicationDbContext context;
         public IsCustomertExistsQueryHandler(IApplicationDbContext context)
@@ -15,7 +15,7 @@ namespace Mc2.CrudTest.Presentation.Server.Application.Customers.Queries
             this.context = context;
         }
 
-        public async Task<bool> Handle(IsCustomertExistsQuery query, CancellationToken cancellationToken)
+        public async Task<bool> Handle(IsCustomerExistsQuery query, CancellationToken cancellationToken)
         {
             return await context.Customers.AnyAsync(c => c.FirstName == query.FirstName
                 && c.LastName == query.LastName && c.DateOfBirth == query.DateOfBirth);

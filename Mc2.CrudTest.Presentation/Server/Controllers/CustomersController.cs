@@ -20,7 +20,7 @@ namespace Mc2.CrudTest.Presentation.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<int>> Create(CreateCustomerCommand command)
         {
-            var isCustomertExistsQuery = new IsCustomertExistsQuery
+            var isCustomertExistsQuery = new IsCustomerExistsQuery
             {
                 FirstName = command.FirstName,
                 LastName = command.LastName,
@@ -28,6 +28,10 @@ namespace Mc2.CrudTest.Presentation.Server.Controllers
             };
             if (await Mediator.Send(isCustomertExistsQuery))
                 throw new Exception("This customer is registered before.");
+
+            var isCustomertEmailExistsQuery = new IsCustomerEmailExistsQuery { Email = command.Email };
+            if (await Mediator.Send(isCustomertEmailExistsQuery))
+                throw new Exception("This Email is registered before.");
 
             return await Mediator.Send(command);
         }
