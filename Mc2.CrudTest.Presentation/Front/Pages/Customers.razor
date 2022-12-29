@@ -1,78 +1,57 @@
-﻿@page "/customers"
+﻿@page "/Customers"
 
-@using Mc2.CrudTest.Shared.Command;
-
-<PageTitle>Customers</PageTitle>
-
-<EditForm Model="@createModel" OnValidSubmit="SubmitForm">
-    <div class="form-group row">
-        <label for="@nameof(createModel.FirstName)" class="col-sm-2 col-form-label text-right">First name : </label>
-        <div class="col-lg-7 col-sm-10">
-            @*<input class="form-control" id="inputFirstname" placeholder="First name" autofocus>*@
-            <InputText placeholder="First name" class="form-control" autofocus required
-                       id="@nameof(createModel.FirstName)" @bind-Value="createModel.FirstName">
-            </InputText>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="@nameof(createModel.LastName)" class="col-sm-2 col-form-label text-right">Last name : </label>
-        <div class="col-lg-7 col-sm-10">
-            <InputText class="form-control" placeholder="Last name" required
-                       id="@nameof(createModel.LastName)" @bind-Value="createModel.LastName">
-            </InputText>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="@nameof(createModel.DateOfBirth)" class="col-sm-2 col-form-label text-right">Date of birth : </label>
-        <div class="col-lg-7 col-sm-10">
-            <InputDate class="form-control" placeholder="Date of birth" required
-                       id="@nameof(createModel.DateOfBirth)" @bind-Value="createModel.DateOfBirth">
-            </InputDate>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="@nameof(createModel.DateOfBirth)" class="col-sm-2 col-form-label text-right">Phone number : </label>
-        <div class="col-lg-7 col-sm-10">
-            <InputText class="form-control" placeholder="Phone number" required
-                       id="@nameof(createModel.PhoneNumber)" @bind-Value="createModel.PhoneNumber">
-            </InputText>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="@nameof(createModel.Email)" class="col-sm-2 col-form-label text-right">Email : </label>
-        <div class="col-lg-7 col-sm-10">
-            <InputText type="email" class="form-control" placeholder="Email" required
-                       id="@nameof(createModel.Email)" @bind-Value="createModel.Email">
-            </InputText>
-        </div>
-    </div>
-    <div class="form-group row">
-        <label for="@nameof(createModel.BankAccountNumber)" class="col-sm-2 col-form-label text-right">Bank account number : </label>
-        <div class="col-lg-7 col-sm-10">
-            <input class="form-control" placeholder="Bank account number" required
-                   id="@nameof(createModel.BankAccountNumber)"
-                   @bind="createModel.BankAccountNumber" />
-        </div>
-    </div>
-    <div class="col-lg-2">
-        <button type="submit" class="btn btn-primary btn-block">Submit</button>
-    </div>
-</EditForm>
+<button class="btn btn-primary mb-2" @onclick="AddCustomerButtonClick">Add new customer</button>
+@if (customers.Count > 0)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Date Of Birth</th>
+                <th>Phone Number</th>
+                <th>Email</th>
+                <th>Bank Account Number</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in customers)
+            {
+                <tr>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.DateOfBirth.ToShortDateString()</td>
+                    <td>@customer.PhoneNumber</td>
+                    <td>@customer.Email</td>
+                    <td>@customer.BankAccountNumber</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div>Loading...</div>
+}
 
 @code {
-    private CreateCustomerCommand createModel = new();
+    public List<Customer> customers = new List<Customer>();
 
-    private async Task SubmitForm()
+    protected override async Task OnInitializedAsync()
     {
-        var response = await _http.PostAsJsonAsync("Customers/Create", createModel);
-        if (response.IsSuccessStatusCode) // 200
+        var response = await _http.GetAsync("Customers/GetAll");
+        if (response.IsSuccessStatusCode)
         {
-            await JsRuntime.InvokeVoidAsync("alert", "Done.");
-            //_navigationManager.NavigateTo("/customers");
+            using (var reponseStream = await response.Content.ReadAsStreamAsync())
+            {
+                var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+                customers = await JsonSerializer.DeserializeAsync<List<Customer>>(reponseStream, options);
+            }
         }
-        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-        {
-            await JsRuntime.InvokeVoidAsync("alert", response.Content.ReadAsStringAsync().Result);
-        }
+    }
+
+    private void AddCustomerButtonClick()
+    {
+        _navigationManager.NavigateTo("AddEditCustomer");
     }
 }

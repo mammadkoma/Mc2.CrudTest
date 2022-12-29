@@ -4,6 +4,7 @@ using Mc2.CrudTest.Presentation.Server.Application.Common.Interfaces;
 using Mc2.CrudTest.Presentation.Server.Application.Customers.Commands.CreateCustomer;
 using Mc2.CrudTest.Presentation.Server.Infrastructure.Persistence;
 using Mc2.CrudTest.Presentation.Server.Infrastructure.Services;
+using Mc2.CrudTest.Presentation.Server.WebAppConfigs;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -24,11 +25,9 @@ namespace Mc2.CrudTest.Presentation.Server
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllersWithViews();
+            services.AddControllers().AddBadRequestServices();
             services.AddRazorPages();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DataBaseConnection")));
@@ -38,7 +37,6 @@ namespace Mc2.CrudTest.Presentation.Server
             services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -49,7 +47,6 @@ namespace Mc2.CrudTest.Presentation.Server
             else
             {
                 app.UseExceptionHandler("/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 

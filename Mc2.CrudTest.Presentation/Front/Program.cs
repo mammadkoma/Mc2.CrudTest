@@ -12,10 +12,7 @@ namespace Mc2.CrudTest.Presentation.Front
         {
             WebAssemblyHostBuilder builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
-
-            //builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri("https://localhost:5001/api/") });
-
+            builder.Services.AddScoped(_ => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress + "api/") });
             await builder.Build().RunAsync();
         }
     }

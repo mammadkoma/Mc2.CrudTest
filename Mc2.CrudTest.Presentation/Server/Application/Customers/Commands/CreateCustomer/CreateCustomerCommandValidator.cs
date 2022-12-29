@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Mc2.CrudTest.Presentation.Server.Application.Common.Interfaces;
-using Mc2.CrudTest.Shared.Command;
 
 namespace Mc2.CrudTest.Presentation.Server.Application.Customers.Commands.CreateCustomer
 {

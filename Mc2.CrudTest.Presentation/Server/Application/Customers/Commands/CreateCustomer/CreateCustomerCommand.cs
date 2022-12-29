@@ -1,36 +1,44 @@
 ﻿using Mc2.CrudTest.Presentation.Server.Application.Common.Interfaces;
-using Mc2.CrudTest.Shared.Command;
 using Mc2.CrudTest.Shared.Domain;
 using MediatR;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mc2.CrudTest.Presentation.Server.Application.Customers.Commands.CreateCustomer
 {
-    public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, int>
+    public class CreateCustomerCommand : IRequest<int>
     {
-        private readonly IApplicationDbContext _context;
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Email { get; set; }
+        public ulong BankAccountNumber { get; set; }
 
-        public CreateCustomerCommandHandler(IApplicationDbContext context)
+        public class CreateCustomerCommandHandler : IRequestHandler<CreateCustomerCommand, int>
         {
-            _context = context;
-        }
-
-        async Task<int> IRequestHandler<CreateCustomerCommand, int>.Handle(CreateCustomerCommand request, CancellationToken cancellationToken)
-        {
-            var entity = new Customer
+            private IApplicationDbContext context;
+            public CreateCustomerCommandHandler(IApplicationDbContext context)
             {
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                DateOfBirth = request.DateOfBirth,
-                PhoneNumber = request.PhoneNumber,
-                Email = request.Email,
-                BankAccountNumber = request.BankAccountNumber,
-            };
+                this.context = context;
+            }
+            public async Task<int> Handle(CreateCustomerCommand command, CancellationToken cancellationToken)
+            {
+                var newCustomer = new Customer
+                {
+                    FirstName = command.FirstName,
+                    LastName = command.LastName,
+                    DateOfBirth = command.DateOfBirth,
+                    PhoneNumber = command.PhoneNumber,
+                    Email = command.Email,
+                    BankAccountNumber = command.BankAccountNumber,
+                };
 
-            _context.Customers.Add(entity);
-
-            return await _context.SaveChangesAsync(cancellationToken);
+                context.Customers.Add(newCustomer);
+                await context.SaveChangesAsync(cancellationToken);
+                return newCustomer.Id;
+            }
         }
     }
 }
