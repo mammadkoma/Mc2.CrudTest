@@ -1,4 +1,5 @@
 ﻿@page "/AddEditCustomer"
+@using System.Text.RegularExpressions;
 
 <EditForm Model="@createModel" OnValidSubmit="SubmitForm">
     <div class="form-group row">
@@ -45,7 +46,7 @@
     <div class="form-group row">
         <label for="@nameof(createModel.BankAccountNumber)" class="col-sm-2 col-form-label text-right">Bank account number : </label>
         <div class="col-lg-7 col-sm-10">
-            <input class="form-control" placeholder="Bank account number" required
+            <input type="number" class="form-control" placeholder="Bank account number" required
                    id="@nameof(createModel.BankAccountNumber)"
                    @bind="createModel.BankAccountNumber" />
         </div>
@@ -60,15 +61,18 @@
 
     private async Task SubmitForm()
     {
+        var emailPattern = @"^[A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-‌​]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})$";
+        Regex regex = new Regex(emailPattern);
+        if (regex.IsMatch(createModel.Email) == false)
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Email is not valid!");
+            return;
+        }
+
         var response = await _http.PostAsJsonAsync("Customers/Create", createModel);
         if (response.IsSuccessStatusCode) // 200
-        {
-            //await JsRuntime.InvokeVoidAsync("alert", "Done.");
             _navigationManager.NavigateTo("Customers");
-        }
         else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
-        {
             await JsRuntime.InvokeVoidAsync("alert", response.Content.ReadAsStringAsync().Result);
-        }
     }
 }

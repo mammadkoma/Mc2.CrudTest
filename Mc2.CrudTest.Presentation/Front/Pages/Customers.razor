@@ -1,38 +1,32 @@
 ﻿@page "/Customers"
 
 <button class="btn btn-primary mb-2" @onclick="AddCustomerButtonClick">Add new customer</button>
-@if (customers.Count > 0)
-{
-    <table class="table">
-        <thead>
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Date Of Birth</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Bank Account Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var customer in customers)
+        {
             <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Date Of Birth</th>
-                <th>Phone Number</th>
-                <th>Email</th>
-                <th>Bank Account Number</th>
+                <td>@customer.FirstName</td>
+                <td>@customer.LastName</td>
+                <td>@customer.DateOfBirth.ToShortDateString()</td>
+                <td>@customer.PhoneNumber</td>
+                <td>@customer.Email</td>
+                <td>@customer.BankAccountNumber</td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach (var customer in customers)
-            {
-                <tr>
-                    <td>@customer.FirstName</td>
-                    <td>@customer.LastName</td>
-                    <td>@customer.DateOfBirth.ToShortDateString()</td>
-                    <td>@customer.PhoneNumber</td>
-                    <td>@customer.Email</td>
-                    <td>@customer.BankAccountNumber</td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <div>Loading...</div>
-}
+        }
+    </tbody>
+</table>
+
 
 @code {
     public List<Customer> customers = new List<Customer>();
