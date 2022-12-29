@@ -57,7 +57,7 @@
 </EditForm>
 
 @code {
-    private Customer createModel = new();
+    private CreateCustomerCommand createModel = new();
 
     private async Task SubmitForm()
     {
@@ -72,7 +72,7 @@
         var response = await _http.PostAsJsonAsync("Customers/Create", createModel);
         if (response.IsSuccessStatusCode) // 200
             _navigationManager.NavigateTo("Customers");
-        else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+        else
             await JsRuntime.InvokeVoidAsync("alert", response.Content.ReadAsStringAsync().Result);
     }
 }

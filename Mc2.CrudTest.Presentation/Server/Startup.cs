@@ -27,7 +27,7 @@ namespace Mc2.CrudTest.Presentation.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddBadRequestServices();
+            services.AddControllers().AddBadRequestHandlerService();
             services.AddRazorPages();
             services.AddMediatR(typeof(Startup).GetTypeInfo().Assembly);
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DataBaseConnection")));
@@ -50,6 +50,7 @@ namespace Mc2.CrudTest.Presentation.Server
                 app.UseHsts();
             }
 
+            app.AddExceptionHandlerService();
             app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();

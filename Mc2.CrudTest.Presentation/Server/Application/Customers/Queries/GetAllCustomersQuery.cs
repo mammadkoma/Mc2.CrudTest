@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Mc2.CrudTest.Presentation.Server.Application.Customers.Queries.GetCustomers
+namespace Mc2.CrudTest.Presentation.Server.Application.Customers.Queries
 {
     public class GetAllCustomerQuery : IRequest<List<Customer>>
     {

@@ -6,7 +6,7 @@ namespace Mc2.CrudTest.Presentation.Server.WebAppConfigs
 {
     public static class BadRequestConfig
     {
-        public static IMvcBuilder AddBadRequestServices(this IMvcBuilder services)
+        public static IMvcBuilder AddBadRequestHandlerService(this IMvcBuilder services)
         {
             services.ConfigureApiBehaviorOptions(options =>
             options.InvalidModelStateResponseFactory = actionContext =>

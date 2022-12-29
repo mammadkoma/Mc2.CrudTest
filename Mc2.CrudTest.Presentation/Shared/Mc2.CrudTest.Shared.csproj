@@ -8,9 +8,4 @@
     <PackageReference Include="MediatR" Version="11.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Command\" />
-    <Folder Include="Query\" />
-  </ItemGroup>
-
 </Project>
