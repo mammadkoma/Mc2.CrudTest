@@ -24,9 +24,5 @@
     <ProjectReference Include="..\Front\Mc2.CrudTest.Presentation.Front.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Application\Persistence\" />
-  </ItemGroup>
-
 
 </Project>
