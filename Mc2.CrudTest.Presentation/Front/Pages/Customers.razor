@@ -10,6 +10,7 @@
             <th>Phone Number</th>
             <th>Email</th>
             <th>Bank Account Number</th>
+            <th>Commands</th>
         </tr>
     </thead>
     <tbody>
@@ -22,6 +23,14 @@
                 <td>@customer.PhoneNumber</td>
                 <td>@customer.Email</td>
                 <td>@customer.BankAccountNumber</td>
+                <td>
+                    <button class="btn btn-primary" @onclick="()=>EditCustomerButtonClick(customer.Id)">
+                        Edit
+                    </button>
+                    <button class="btn btn-danger" @onclick="()=>DeleteCustomerButtonClick(customer.Id)">
+                        Delete
+                    </button>
+                </td>
             </tr>
         }
     </tbody>
@@ -33,7 +42,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var response = await _http.GetAsync("Customers/GetAll");
+        var response = await _http.GetAsync("customers/GetAll");
         if (response.IsSuccessStatusCode)
         {
             using (var reponseStream = await response.Content.ReadAsStreamAsync())
@@ -47,5 +56,23 @@
     private void AddCustomerButtonClick()
     {
         _navigationManager.NavigateTo("AddEditCustomer");
+    }
+
+    private void EditCustomerButtonClick(int id)
+    {
+        _navigationManager.NavigateTo("AddEditCustomer/" + id);
+    }
+
+    private async Task DeleteCustomerButtonClick(int id)
+    {
+        bool confirmed = await JsRuntime.InvokeAsync<bool>("confirm", "Are you sure?");
+        if (confirmed)
+        {
+            var response = await _http.DeleteAsync("customers/Delete/" + id);
+            if (response.IsSuccessStatusCode) // 200
+                await OnInitializedAsync();
+            else
+                await JsRuntime.InvokeVoidAsync("alert", response.Content.ReadAsStringAsync().Result);
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace Mc2.CrudTest.Presentation.Server
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DataBaseConnection")));
             services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
             services.AddScoped<IStringService, StringService>();
-            services.AddValidatorsFromAssemblyContaining<CreateCustomerCommandValidator>();
+            services.AddValidatorsFromAssemblyContaining<UpdateCustomerCommandValidator>();
             services.AddFluentValidationAutoValidation().AddFluentValidationClientsideAdapters();
         }
 

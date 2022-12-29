@@ -2,9 +2,9 @@
 using Mc2.CrudTest.Presentation.Server.Application.Common.Interfaces;
 using Mc2.CrudTest.Shared.Command;
 
-namespace Mc2.CrudTest.Presentation.Server.Application.Customers.Commands.CreateCustomer
+namespace Mc2.CrudTest.Presentation.Server.Application.Customers.Commands.UpdateCustomer
 {
-    public class UpdateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
+    public class UpdateCustomerCommandValidator : AbstractValidator<UpdateCustomerCommand>
     {
         private readonly IStringService _stringService;
 
